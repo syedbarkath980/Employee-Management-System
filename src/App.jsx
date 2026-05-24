@@ -1,7 +1,11 @@
-import React from "react";
+import Login from "./components/Login";
 
 const App = () => {
-  return <div className="text-7xl font-sans text-blue-400">EMS</div>;
+  return (
+    <div>
+      <Login />
+    </div>
+  );
 };
 
 export default App;

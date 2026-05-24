@@ -6,6 +6,7 @@
 - UI:
   E-mail (INPUT)
   Password (INPUT)
-  Login (BUTTON)
+
+                        Login (BUTTON)
 
 - Validation ?
