@@ -8,3 +8,13 @@ client
     .setProject(conf.appwriteProjectId);
 
 export const account = new Account(client);
+
+
+export const login = async (email, password) => {
+    return await account.createEmailPasswordSession(email, password);
+}
+
+
+export const getCurrentUser = async () => {
+    return await account.get();
+}

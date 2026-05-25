@@ -1,4 +1,20 @@
-const Login = () => {
+import { useState } from "react";
+import { login } from "../../appwrite/auth_service";
+
+const Login = ({ onLoginSuccess }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await login(email, password);
+      onLoginSuccess();
+    } catch {
+      alert("Invalid Credentials!");
+    }
+  };
+
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-[#FBFBFB] px-4">
       <div
@@ -17,7 +33,7 @@ const Login = () => {
           </p>
         </div>
 
-        <form className="space-y-5">
+        <form className="space-y-5" onSubmit={handleFormSubmit}>
           <div>
             <label className="mb-2 block text-sm font-medium text-[#2B3E50]">
               Email address
@@ -26,6 +42,8 @@ const Login = () => {
               className="w-full appearance-none rounded-xl border border-[#E1E1E1] bg-white px-4 py-3 text-base text-[#2B3E50] outline-none transition placeholder:text-base placeholder:text-[#2B3E50]/40 hover:border-[#E1E1E1] focus:border-[#084B8A] focus:ring-4 focus:ring-[#87CEEB]/25"
               type="text"
               placeholder="Enter your email"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
             />
           </div>
 
@@ -34,13 +52,18 @@ const Login = () => {
               Password
             </label>
             <input
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full appearance-none rounded-xl border border-[#E1E1E1] bg-white px-4 py-3 text-base text-[#2B3E50] outline-none transition placeholder:text-base placeholder:text-[#2B3E50]/40 hover:border-[#E1E1E1] focus:border-[#084B8A] focus:ring-4 focus:ring-[#87CEEB]/25"
               type="password"
               placeholder="Enter your password"
             />
           </div>
 
-          <button className="w-full rounded-xl bg-[#084B8A] px-6 py-3.5 font-semibold text-white transition hover:bg-[#2B3E50]">
+          <button
+            className="w-full rounded-xl bg-[#084B8A] px-6 py-3.5 font-semibold text-white transition hover:bg-[#2B3E50]"
+            type="submit"
+          >
             Login
           </button>
         </form>

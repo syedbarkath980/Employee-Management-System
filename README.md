@@ -9,4 +9,12 @@
 
                         Login (BUTTON)
 
-- Validation ?
+- Validation :
+  i. ADMIN DASHBOARD:
+
+        Form:
+          - Title
+          - Employee
+          - Category
+          - Description
+          - Assign
