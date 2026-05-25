@@ -16,7 +16,10 @@ const Login = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-[#FBFBFB] px-4">
+    <div className="relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#FBFBFB] px-4">
+      <div className="pointer-events-none absolute -left-24 top-24 h-72 w-72 rounded-full bg-[#084B8A]/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 -top-16 h-80 w-80 rounded-full bg-[#87CEEB]/20 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-[#084B8A]/8 blur-3xl" />
       <div
         className="w-full max-w-md rounded-xl border border-[#E1E1E1] bg-white p-10 shadow-[0_20px_60px_rgba(43,62,80,0.08)]"
         style={{
