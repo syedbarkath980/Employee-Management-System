@@ -1,17 +1,35 @@
 import { useState } from "react";
-import { login } from "../../appwrite/auth_service";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { getCurrentUser, login } from "../../appwrite/auth_service";
 
-const Login = ({ onLoginSuccess }) => {
+const Login = ({ onLoginSuccess, setUserType }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
       await login(email, password);
+      const userData = getCurrentUser();
+      const usertype = await userData;
+      setUserType(usertype.name);
       onLoginSuccess();
-    } catch {
-      alert("Invalid Credentials!");
+    } catch (error) {
+      console.error("Login flow failed:", error);
+
+      const isInvalidCredentials =
+        error?.code === 401 || error?.type === "user_invalid_credentials";
+
+      alert(
+        isInvalidCredentials
+          ? "Invalid Credentials!"
+          : error?.message || "Login failed. Please try again.",
+      );
     }
   };
 
@@ -54,13 +72,27 @@ const Login = ({ onLoginSuccess }) => {
             <label className="mb-2 block text-sm font-medium text-[#2B3E50]">
               Password
             </label>
-            <input
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full appearance-none rounded-xl border border-[#E1E1E1] bg-white px-4 py-3 text-base text-[#2B3E50] outline-none transition placeholder:text-base placeholder:text-[#2B3E50]/40 hover:border-[#E1E1E1] focus:border-[#084B8A] focus:ring-4 focus:ring-[#87CEEB]/25"
-              type="password"
-              placeholder="Enter your password"
-            />
+            <div className="relative">
+              <input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full appearance-none rounded-xl border border-[#E1E1E1] bg-white px-4 py-3 pr-12 text-base text-[#2B3E50] outline-none transition placeholder:text-base placeholder:text-[#2B3E50]/40 hover:border-[#E1E1E1] focus:border-[#084B8A] focus:ring-4 focus:ring-[#87CEEB]/25"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+              />
+              <button
+                type="button"
+                onClick={toggleVisibility}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full border border-[#E1E1E1] bg-[#FBFBFB] p-2 text-[#2B3E50] transition hover:border-[#084B8A] hover:text-[#084B8A] focus:outline-none focus:ring-4 focus:ring-[#87CEEB]/25"
+              >
+                {showPassword ? (
+                  <FiEyeOff className="h-4 w-4" />
+                ) : (
+                  <FiEye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
           </div>
 
           <button
