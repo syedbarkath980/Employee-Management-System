@@ -1,5 +1,6 @@
 import { AssignTask } from "../../../index";
 import { logout } from "../../../appwrite/auth_service";
+import CreateEmployee from "../AdminTasks/CreateEmployee";
 
 const AdminDashboard = ({ onLogoutSuccess }) => {
   const handleLogout = async () => {
@@ -35,6 +36,10 @@ const AdminDashboard = ({ onLogoutSuccess }) => {
 
         <section className="rounded-xl border border-[#E1E1E1] bg-white p-4 shadow-sm sm:p-6 lg:p-8">
           <AssignTask />
+        </section>
+
+        <section>
+          <CreateEmployee />
         </section>
       </div>
     </div>

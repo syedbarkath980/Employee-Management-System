@@ -1,4 +1,33 @@
+import { useState, useEffect } from "react";
+import { getAllEmployees, createTask } from "../../../appwrite/db_service";
+
 const AssignTask = () => {
+  const [allEmployees, setallEmployees] = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [assignedto, setAssignedTo] = useState("");
+  const [category, setCategory] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await createTask(title, description, assignedto, category);
+    alert("Task assigned successfully!");
+    setTitle("");
+    setDescription("");
+    setAssignedTo("");
+    setCategory("");
+  };
+
+  const fetchAllEmployees = async () => {
+    const data = await getAllEmployees();
+
+    setallEmployees(data.documents);
+  };
+
+  useEffect(() => {
+    fetchAllEmployees();
+  }, []);
+
   return (
     <div className="w-full">
       <div className="rounded-xl border border-[#E1E1E1] bg-white p-6 shadow-sm sm:p-8">
@@ -15,12 +44,13 @@ const AssignTask = () => {
           </p>
         </div>
 
-        <form className="grid gap-5">
+        <form className="grid gap-5" onSubmit={handleSubmit}>
           <div className="grid gap-2">
             <label className="text-sm font-medium text-[#2B3E50]">Title</label>
             <input
               type="text"
               placeholder="Enter title..."
+              onChange={(e) => setTitle(e.target.value)}
               className="w-full rounded-lg border border-[#E1E1E1] bg-[#FBFBFB] px-4 py-3 text-base text-[#2B3E50] outline-none transition placeholder:text-[#2B3E50]/40 focus:border-[#084B8A] focus:ring-2 focus:ring-[#87CEEB]/20"
             />
           </div>
@@ -29,11 +59,16 @@ const AssignTask = () => {
             <label className="text-sm font-medium text-[#2B3E50]">
               Employee
             </label>
-            <select className="w-full rounded-lg border border-[#E1E1E1] bg-[#FBFBFB] px-4 py-3 text-base text-[#2B3E50] outline-none transition focus:border-[#084B8A] focus:ring-2 focus:ring-[#87CEEB]/20">
-              <option value="">Select an employee</option>
-              <option value="employee-1">Employee 01</option>
-              <option value="employee-2">Employee 02</option>
-              <option value="employee-3">Employee 03</option>
+            <select
+              onChange={(e) => setAssignedTo(e.target.value)}
+              className="w-full rounded-lg border border-[#E1E1E1] bg-[#FBFBFB] px-4 py-3 text-base text-[#2B3E50] outline-none transition focus:border-[#084B8A] focus:ring-2 focus:ring-[#87CEEB]/20"
+            >
+              <option>Select an employee</option>
+              {allEmployees.map((employee) => (
+                <option value={employee.userId} key={employee.userId}>
+                  {employee.name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -42,6 +77,7 @@ const AssignTask = () => {
               Category
             </label>
             <input
+              onChange={(e) => setCategory(e.target.value)}
               type="text"
               placeholder="Dev, UI, Operations..."
               className="w-full rounded-lg border border-[#E1E1E1] bg-[#FBFBFB] px-4 py-3 text-base text-[#2B3E50] outline-none transition placeholder:text-[#2B3E50]/40 focus:border-[#084B8A] focus:ring-2 focus:ring-[#87CEEB]/20"
@@ -53,6 +89,7 @@ const AssignTask = () => {
               Description
             </label>
             <textarea
+              onChange={(e) => setDescription(e.target.value)}
               rows="5"
               placeholder="Add task details, expectations, or deadlines..."
               className="w-full resize-none rounded-lg border border-[#E1E1E1] bg-[#FBFBFB] px-4 py-3 text-base text-[#2B3E50] outline-none transition placeholder:text-[#2B3E50]/40 focus:border-[#084B8A] focus:ring-2 focus:ring-[#87CEEB]/20"
@@ -63,7 +100,10 @@ const AssignTask = () => {
             <p className="text-sm text-[#2B3E50]/70">
               Review the assignment before sending it to the selected employee.
             </p>
-            <button className="rounded-lg bg-[#084B8A] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#2B3E50]">
+            <button
+              type="submit"
+              className="rounded-lg bg-[#084B8A] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#2B3E50]"
+            >
               Assign Task
             </button>
           </div>

@@ -1,4 +1,4 @@
-import { Client, Account } from 'appwrite';
+import { Client, Account, ID } from 'appwrite';
 import conf from '../conf/conf';
 
 const client = new Client();
@@ -21,4 +21,9 @@ export const logout = async () => {
 
 export const getCurrentUser = async () => {
     return await account.get();
+}
+
+
+export const createEmployee = async (name, email, password) => {
+    return await account.create(ID.unique(), email, password, name)
 }
