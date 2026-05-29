@@ -48,6 +48,7 @@ const AssignTask = () => {
           <div className="grid gap-2">
             <label className="text-sm font-medium text-[#2B3E50]">Title</label>
             <input
+              value={title}
               type="text"
               placeholder="Enter title..."
               onChange={(e) => setTitle(e.target.value)}
@@ -60,6 +61,7 @@ const AssignTask = () => {
               Employee
             </label>
             <select
+              value={assignedto}
               onChange={(e) => setAssignedTo(e.target.value)}
               className="w-full rounded-lg border border-[#E1E1E1] bg-[#FBFBFB] px-4 py-3 text-base text-[#2B3E50] outline-none transition focus:border-[#084B8A] focus:ring-2 focus:ring-[#87CEEB]/20"
             >
@@ -77,6 +79,7 @@ const AssignTask = () => {
               Category
             </label>
             <input
+              value={category}
               onChange={(e) => setCategory(e.target.value)}
               type="text"
               placeholder="Dev, UI, Operations..."
@@ -89,6 +92,7 @@ const AssignTask = () => {
               Description
             </label>
             <textarea
+              value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows="5"
               placeholder="Add task details, expectations, or deadlines..."

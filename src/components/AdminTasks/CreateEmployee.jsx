@@ -12,7 +12,10 @@ const CreateEmployee = () => {
     try {
       const user = await createEmployee(name, email, password);
       await createUser(name, email, user.$id);
-      console.log("Employee Created Successfully");
+      alert("Employee Added Successfully!");
+      setName("");
+      setEmail("");
+      setPassword("");
     } catch {
       console.log("Error", Error);
     }
@@ -38,6 +41,7 @@ const CreateEmployee = () => {
             Name
           </label>
           <input
+            value={name}
             onChange={(e) => {
               setName(e.target.value);
             }}
@@ -49,6 +53,7 @@ const CreateEmployee = () => {
             E-mail
           </label>
           <input
+            value={email}
             onChange={(e) => {
               setEmail(e.target.value);
             }}
@@ -60,10 +65,11 @@ const CreateEmployee = () => {
             Password
           </label>
           <input
+            value={password}
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-            type="password"
+            type="text"
             placeholder="Password.."
             className="w-full rounded-xl border border-[#E1E1E1] bg-[#FBFBFB] px-4 py-3 text-sm text-[#2B3E50] outline-none transition placeholder:text-[#2B3E50]/35 focus:border-[#084B8A] focus:bg-white focus:ring-4 focus:ring-[#87CEEB]/25"
           />

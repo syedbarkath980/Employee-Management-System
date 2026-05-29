@@ -1,28 +1,37 @@
 import { useEffect, useState } from "react";
 import { logout, getCurrentUser } from "../../../appwrite/auth_service";
-import { getEmployeeTasks } from "../../../appwrite/db_service";
+import {
+  getEmployeeTasks,
+  updateTaskStatus,
+} from "../../../appwrite/db_service";
 
 const EmployeeDashboard = ({ onLogoutSuccess }) => {
   const [username, setUsername] = useState("");
-  // const [title, setTitle] = useState("");
-  // const [category, setCategory] = useState("");
-  // const [description, setDescription] = useState("");
   const [tasks, setTasks] = useState([]);
 
   const totalTasks = tasks.length;
   const pendingTasks = tasks.filter((task) => task.status === "pending").length;
-  const completedTasks = tasks.filter(
+  let completedTasks = tasks.filter(
     (task) => task.status === "completed",
   ).length;
+
+  const handleCompletedTask = async (taskId) => {
+    await updateTaskStatus(taskId, "completed");
+    getCurrentUser().then((user) => {
+      getEmployeeTasks(user.$id).then((data) => {
+        setTasks(data.documents);
+      });
+    });
+  };
 
   useEffect(() => {
     getCurrentUser().then((user) => {
       setUsername(user.name);
-      getEmployeeTasks(user.$id).then((data) => setTasks(data.documents));
+      getEmployeeTasks(user.$id).then((data) => {
+        setTasks(data.documents);
+      });
     });
   }, []);
-
-  // console.log(tasks);
 
   const handleLogout = async () => {
     try {
@@ -146,7 +155,13 @@ const EmployeeDashboard = ({ onLogoutSuccess }) => {
                       {task.category}
                     </p>
                     <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#2B3E50]/55">
-                      Employee task
+                      <button
+                        aria-label={`Mark ${task.title} as completed`}
+                        className="inline-flex items-center justify-center rounded-2xl bg-[#084B8A] px-5 py-2 text-sm font-semibold text-white normal-case shadow-md hover:bg-[#073a6f] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#87CEEB]"
+                        onClick={() => handleCompletedTask(task.$id)}
+                      >
+                        Done ✅
+                      </button>
                     </p>
                   </div>
                 </div>

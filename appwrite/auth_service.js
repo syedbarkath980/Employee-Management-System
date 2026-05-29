@@ -27,3 +27,4 @@ export const getCurrentUser = async () => {
 export const createEmployee = async (name, email, password) => {
     return await account.create(ID.unique(), email, password, name)
 }
+
