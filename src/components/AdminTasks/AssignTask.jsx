@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getAllEmployees, createTask } from "../../../appwrite/db_service";
 
-const AssignTask = () => {
+const AssignTask = ({ onTaskAssigned }) => {
   const [allEmployees, setallEmployees] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -16,6 +16,7 @@ const AssignTask = () => {
     setDescription("");
     setAssignedTo("");
     setCategory("");
+    await onTaskAssigned();
   };
 
   const fetchAllEmployees = async () => {

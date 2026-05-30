@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import {
   getAllEmployees,
   getEmployeeTasks,
+  deleteTask,
 } from "../../../appwrite/db_service";
 import EmployeeAccordian from "../other/EmployeeAccordian";
 
@@ -31,6 +32,20 @@ const AdminDashboard = ({ onLogoutSuccess }) => {
     fetchEmployees();
   }, []);
 
+  const handleDeleteTask = async (employeeId, taskId) => {
+    await deleteTask(taskId);
+    setEmployees((prevEmployees) =>
+      prevEmployees.map((employee) =>
+        employee.$id === employeeId
+          ? {
+              ...employee,
+              tasks: employee.tasks.filter((t) => t.$id !== taskId),
+            }
+          : employee,
+      ),
+    );
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -38,6 +53,17 @@ const AdminDashboard = ({ onLogoutSuccess }) => {
     } catch {
       alert("Cant logout");
     }
+  };
+
+  const handleTaskAssigned = async () => {
+    const response = await getAllEmployees();
+    const employeesWithTasks = await Promise.all(
+      response.documents.map(async (employee) => {
+        const tasks = await getEmployeeTasks(employee.userId);
+        return { ...employee, tasks: tasks.documents };
+      }),
+    );
+    setEmployees(employeesWithTasks);
   };
 
   return (
@@ -63,7 +89,7 @@ const AdminDashboard = ({ onLogoutSuccess }) => {
         </header>
 
         <section className="rounded-xl border border-[#E1E1E1] bg-white p-4 shadow-sm sm:p-6 lg:p-8">
-          <AssignTask />
+          <AssignTask onTaskAssigned={handleTaskAssigned} />
         </section>
         <section className="rounded-2xl border border-[#E1E1E1] bg-white p-4 shadow-sm sm:p-6">
           <div className="mb-4">
@@ -79,6 +105,9 @@ const AdminDashboard = ({ onLogoutSuccess }) => {
                 key={employee.$id}
                 employee={employee}
                 isOpen={openId === employee.$id}
+                onDeleteTask={(taskId) =>
+                  handleDeleteTask(employee.$id, taskId)
+                }
                 onToggle={() =>
                   setOpenId(openId === employee.$id ? null : employee.$id)
                 }

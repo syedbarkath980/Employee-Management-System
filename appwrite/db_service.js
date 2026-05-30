@@ -21,6 +21,14 @@ const createTask = async (title, description, assignedto, category) => {
     return await databases.createDocument(conf.appwriteDatabaseId, conf.appwriteTaskId, ID.unique(), { title, category, description, assignedto, status: "pending" })
 }
 
+export const deleteTask = async (taskId) => {
+    return await databases.deleteDocument(
+        conf.appwriteDatabaseId,
+        conf.appwriteTaskId,
+        taskId
+    )
+}
+
 const getEmployeeTasks = async (userId) => {
     return await databases.listDocuments(
         conf.appwriteDatabaseId,

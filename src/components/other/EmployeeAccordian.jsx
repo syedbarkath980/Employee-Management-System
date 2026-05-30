@@ -1,4 +1,4 @@
-const EmployeeAccordian = ({ employee, isOpen, onToggle }) => {
+const EmployeeAccordian = ({ employee, isOpen, onToggle, onDeleteTask }) => {
   const total = employee.tasks.length;
   const pending = employee.tasks.filter((t) => t.status === "pending").length;
   const completed = employee.tasks.filter(
@@ -7,7 +7,6 @@ const EmployeeAccordian = ({ employee, isOpen, onToggle }) => {
 
   return (
     <div className="rounded-2xl border border-[#E1E1E1] bg-white/95 shadow-[0_12px_30px_rgba(43,62,80,0.06)]">
-      {/* Header row - click to toggle (styling only) */}
       <button
         onClick={onToggle}
         className="w-full flex items-center justify-between gap-4 px-4 py-4 sm:px-6 sm:py-5 hover:bg-[#FBFBFB] hover:rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#87CEEB]"
@@ -17,7 +16,6 @@ const EmployeeAccordian = ({ employee, isOpen, onToggle }) => {
           <span className="text-lg sm:text-xl font-bold text-[#084B8A]">
             {employee.name}
           </span>
-          <span className="text-xs text-[#2B3E50]/60">Employee</span>
         </div>
 
         <div className="flex flex-col items-end gap-1">
@@ -36,7 +34,6 @@ const EmployeeAccordian = ({ employee, isOpen, onToggle }) => {
         <div className="text-[#084B8A] text-sm">{isOpen ? "▲" : "▼"}</div>
       </button>
 
-      {/* Tasks list - shows on open (styling only) */}
       {isOpen && (
         <div className="px-4 pb-4 sm:px-6 sm:pb-6 grid gap-3">
           {employee.tasks.map((task) => (
@@ -44,15 +41,23 @@ const EmployeeAccordian = ({ employee, isOpen, onToggle }) => {
               key={task.$id}
               className="rounded-xl border border-[#E1E1E1] bg-[#FBFBFB] p-3"
             >
-              <div className="flex items-start justify-between gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <h4 className="text-sm font-semibold text-[#2B3E50]">
                   {task.title}
                 </h4>
-                <span
-                  className={`text-xs font-semibold uppercase ${task.status === "pending" ? "text-[#B85E00]" : "text-[#1F7A36]"}`}
-                >
-                  {task.status}
-                </span>
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`text-xs font-semibold uppercase ${task.status === "pending" ? "text-[#B85E00]" : "text-[#1F7A36]"}`}
+                  >
+                    {task.status}
+                  </span>
+                  <button
+                    onClick={() => onDeleteTask(task.$id)}
+                    className="rounded-full border border-[#F75C4E] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#F75C4E] transition hover:bg-[#F75C4E] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F75C4E]/30"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           ))}
