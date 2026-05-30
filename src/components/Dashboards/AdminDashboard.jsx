@@ -1,8 +1,36 @@
 import { AssignTask } from "../../../index";
 import { logout } from "../../../appwrite/auth_service";
 import CreateEmployee from "../AdminTasks/CreateEmployee";
+import { useEffect, useState } from "react";
+import {
+  getAllEmployees,
+  getEmployeeTasks,
+} from "../../../appwrite/db_service";
+import EmployeeAccordian from "../other/EmployeeAccordian";
 
 const AdminDashboard = ({ onLogoutSuccess }) => {
+  const [employees, setEmployees] = useState([]);
+  const [openId, setOpenId] = useState(null);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      const response = await getAllEmployees();
+
+      const employeesWithTasks = await Promise.all(
+        response.documents.map(async (employee) => {
+          const tasks = await getEmployeeTasks(employee.userId);
+          return {
+            ...employee,
+            tasks: tasks.documents,
+          };
+        }),
+      );
+
+      setEmployees(employeesWithTasks);
+    };
+    fetchEmployees();
+  }, []);
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -37,7 +65,27 @@ const AdminDashboard = ({ onLogoutSuccess }) => {
         <section className="rounded-xl border border-[#E1E1E1] bg-white p-4 shadow-sm sm:p-6 lg:p-8">
           <AssignTask />
         </section>
+        <section className="rounded-2xl border border-[#E1E1E1] bg-white p-4 shadow-sm sm:p-6">
+          <div className="mb-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#084B8A]">
+              Team
+            </p>
+            <h2 className="mt-1 text-lg font-bold text-[#2B3E50]">Employees</h2>
+          </div>
 
+          <div className="space-y-4">
+            {employees.map((employee) => (
+              <EmployeeAccordian
+                key={employee.$id}
+                employee={employee}
+                isOpen={openId === employee.$id}
+                onToggle={() =>
+                  setOpenId(openId === employee.$id ? null : employee.$id)
+                }
+              />
+            ))}
+          </div>
+        </section>
         <section>
           <CreateEmployee />
         </section>
