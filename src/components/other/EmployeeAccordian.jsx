@@ -9,7 +9,7 @@ const EmployeeAccordian = ({ employee, isOpen, onToggle, onDeleteTask }) => {
     <div className="rounded-2xl border border-[#E1E1E1] bg-white/95 shadow-[0_12px_30px_rgba(43,62,80,0.06)]">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between gap-4 px-4 py-4 sm:px-6 sm:py-5 hover:bg-[#FBFBFB] hover:rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#87CEEB]"
+        className="w-full flex flex-col items-start gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-5 hover:bg-[#FBFBFB] hover:rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#87CEEB]"
         aria-expanded={isOpen}
       >
         <div className="flex flex-col justify-center">
@@ -18,20 +18,22 @@ const EmployeeAccordian = ({ employee, isOpen, onToggle, onDeleteTask }) => {
           </span>
         </div>
 
-        <div className="flex flex-col items-end gap-1">
-          <div className="grid grid-cols-3 gap-6 text-xs uppercase tracking-[0.18em] text-[#2B3E50]/60 w-56">
+        <div className="flex w-full flex-col items-start gap-1 sm:w-auto sm:items-end">
+          <div className="grid w-full grid-cols-3 gap-4 text-[10px] uppercase tracking-[0.14em] text-[#2B3E50]/60 sm:w-56 sm:gap-6 sm:text-xs sm:tracking-[0.18em]">
             <div className="text-center">Total</div>
             <div className="text-center">Pending</div>
             <div className="text-center">Completed</div>
           </div>
-          <div className="grid grid-cols-3 gap-6 text-xl sm:text-2xl font-bold text-[#2B3E50] w-56">
+          <div className="grid w-full grid-cols-3 gap-4 text-lg font-bold text-[#2B3E50] sm:w-56 sm:gap-6 sm:text-2xl">
             <div className="text-center">{total}</div>
             <div className="text-center text-[#B85E00]">{pending}</div>
             <div className="text-center text-[#1F7A36]">{completed}</div>
           </div>
         </div>
 
-        <div className="text-[#084B8A] text-sm">{isOpen ? "▲" : "▼"}</div>
+        <div className="self-end text-xs text-[#084B8A] sm:self-auto sm:text-sm">
+          {isOpen ? "▲" : "▼"}
+        </div>
       </button>
 
       {isOpen && (

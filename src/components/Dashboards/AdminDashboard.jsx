@@ -73,7 +73,7 @@ const AdminDashboard = ({ onLogoutSuccess }) => {
       <div className="pointer-events-none absolute -bottom-24 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-[#084B8A]/8 blur-3xl" />
 
       <div className="relative mx-auto flex w-full max-w-5xl flex-col gap-6">
-        <header className="relative rounded-xl border border-[#E1E1E1] bg-white px-6 py-6 text-center shadow-sm sm:px-8">
+        <header className="relative flex flex-col items-center gap-3 rounded-xl border border-[#E1E1E1] bg-white px-6 py-6 text-center shadow-sm sm:gap-0 sm:px-8">
           <p className="text-center text-xs font-semibold uppercase tracking-[0.22em] text-[#084B8A]">
             Employee Management System
           </p>
@@ -82,7 +82,7 @@ const AdminDashboard = ({ onLogoutSuccess }) => {
           </h1>
           <button
             onClick={handleLogout}
-            className="absolute right-6 top-1/2 -translate-y-1/2 rounded-full border border-[#084B8A] bg-[#FBFBFB] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#084B8A] transition hover:bg-[#084B8A] hover:text-[#FBFBFB] sm:right-8"
+            className="rounded-full border border-[#084B8A] bg-[#FBFBFB] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#084B8A] transition hover:bg-[#084B8A] hover:text-[#FBFBFB] sm:absolute sm:right-8 sm:top-1/2 sm:-translate-y-1/2"
           >
             Logout
           </button>
