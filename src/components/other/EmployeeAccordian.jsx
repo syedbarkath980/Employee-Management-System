@@ -1,9 +1,7 @@
+import useTaskCounts from "../../hooks/useTaskCounts";
+
 const EmployeeAccordian = ({ employee, isOpen, onToggle, onDeleteTask }) => {
-  const total = employee.tasks.length;
-  const pending = employee.tasks.filter((t) => t.status === "pending").length;
-  const completed = employee.tasks.filter(
-    (t) => t.status === "completed",
-  ).length;
+  const { total, pending, completed } = useTaskCounts(employee.tasks);
 
   return (
     <div className="rounded-2xl border border-[#E1E1E1] bg-white/95 shadow-[0_12px_30px_rgba(43,62,80,0.06)]">

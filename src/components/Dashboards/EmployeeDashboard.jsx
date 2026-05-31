@@ -1,49 +1,13 @@
-import { useEffect, useState } from "react";
-import { logout, getCurrentUser } from "../../../appwrite/auth_service";
-import {
-  getEmployeeTasks,
-  updateTaskStatus,
-} from "../../../appwrite/db_service";
-
 import CompletedTaskAccordian from "../other/CompletedTaskAccordian";
+import useEmployeeTasks from "../../hooks/useEmployeeTasks";
+import useLogout from "../../hooks/useLogout";
 
 const EmployeeDashboard = ({ onLogoutSuccess }) => {
-  const [username, setUsername] = useState("");
-  const [tasks, setTasks] = useState([]);
-
-  const pendingTasks = tasks.filter((task) => task.status === "pending").length;
-  let completedTasks = tasks.filter(
-    (task) => task.status === "completed",
-  ).length;
-  const totalTasks = tasks.length - completedTasks;
-
-  const handleCompletedTask = async (taskId) => {
-    await updateTaskStatus(taskId, "completed");
-
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.$id === taskId ? { ...task, status: "completed" } : task,
-      ),
-    );
-  };
-
-  useEffect(() => {
-    getCurrentUser().then((user) => {
-      setUsername(user.name);
-      getEmployeeTasks(user.$id).then((data) => {
-        setTasks(data.documents);
-      });
-    });
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      onLogoutSuccess();
-    } catch {
-      alert("Cant logout");
-    }
-  };
+  const { username, tasks, markCompleted, counts } = useEmployeeTasks();
+  const handleLogout = useLogout({ onLogoutSuccess });
+  const pendingTasks = counts.pending;
+  const completedTasks = counts.completed;
+  const totalTasks = counts.total;
 
   return (
     <div
@@ -163,7 +127,7 @@ const EmployeeDashboard = ({ onLogoutSuccess }) => {
                         <button
                           aria-label={`Mark ${task.title} as completed`}
                           className="inline-flex items-center justify-center rounded-2xl bg-[#084B8A] px-5 py-2 text-sm font-semibold text-white normal-case shadow-md hover:bg-[#073a6f] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#87CEEB]"
-                          onClick={() => handleCompletedTask(task.$id)}
+                          onClick={() => markCompleted(task.$id)}
                         >
                           Done ✅
                         </button>

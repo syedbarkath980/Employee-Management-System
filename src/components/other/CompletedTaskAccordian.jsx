@@ -1,14 +1,14 @@
-import { useState } from "react";
+import useCompletedTasks from "../../hooks/useCompletedTasks";
+import useDisclosure from "../../hooks/useDisclosure";
 
 const CompletedTaskAccordian = ({ tasks }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const completedTasks = tasks.filter((task) => task.status === "completed");
+  const { isOpen, toggle } = useDisclosure(false);
+  const completedTasks = useCompletedTasks(tasks);
 
   return (
     <div className="rounded-2xl border border-[#E1E1E1] bg-white/95 shadow-[0_18px_40px_rgba(43,62,80,0.06)]">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggle}
         className="flex w-full items-center justify-between px-6 py-4"
       >
         <span className="text-sm font-semibold uppercase tracking-[0.28em] text-[#084B8A]">

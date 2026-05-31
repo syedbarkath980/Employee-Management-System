@@ -1,69 +1,22 @@
+import { useState } from "react";
 import { AssignTask } from "../../../index";
-import { logout } from "../../../appwrite/auth_service";
 import CreateEmployee from "../AdminTasks/CreateEmployee";
-import { useEffect, useState } from "react";
-import {
-  getAllEmployees,
-  getEmployeeTasks,
-  deleteTask,
-} from "../../../appwrite/db_service";
 import EmployeeAccordian from "../other/EmployeeAccordian";
+import useEmployeesWithTasks from "../../hooks/useEmployeesWithTasks";
+import useLogout from "../../hooks/useLogout";
 
 const AdminDashboard = ({ onLogoutSuccess }) => {
-  const [employees, setEmployees] = useState([]);
   const [openId, setOpenId] = useState(null);
-
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      const response = await getAllEmployees();
-
-      const employeesWithTasks = await Promise.all(
-        response.documents.map(async (employee) => {
-          const tasks = await getEmployeeTasks(employee.userId);
-          return {
-            ...employee,
-            tasks: tasks.documents,
-          };
-        }),
-      );
-
-      setEmployees(employeesWithTasks);
-    };
-    fetchEmployees();
-  }, []);
+  const { employees, refreshEmployees, deleteTaskForEmployee } =
+    useEmployeesWithTasks();
+  const handleLogout = useLogout({ onLogoutSuccess });
 
   const handleDeleteTask = async (employeeId, taskId) => {
-    await deleteTask(taskId);
-    setEmployees((prevEmployees) =>
-      prevEmployees.map((employee) =>
-        employee.$id === employeeId
-          ? {
-              ...employee,
-              tasks: employee.tasks.filter((t) => t.$id !== taskId),
-            }
-          : employee,
-      ),
-    );
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      onLogoutSuccess();
-    } catch {
-      alert("Cant logout");
-    }
+    await deleteTaskForEmployee(employeeId, taskId);
   };
 
   const handleTaskAssigned = async () => {
-    const response = await getAllEmployees();
-    const employeesWithTasks = await Promise.all(
-      response.documents.map(async (employee) => {
-        const tasks = await getEmployeeTasks(employee.userId);
-        return { ...employee, tasks: tasks.documents };
-      }),
-    );
-    setEmployees(employeesWithTasks);
+    await refreshEmployees();
   };
 
   return (

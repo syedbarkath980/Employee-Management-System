@@ -1,33 +1,18 @@
-import { useState, useEffect } from "react";
-import { getAllEmployees, createTask } from "../../../appwrite/db_service";
+import useAssignTaskForm from "../../hooks/useAssignTaskForm";
 
 const AssignTask = ({ onTaskAssigned }) => {
-  const [allEmployees, setallEmployees] = useState([]);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [assignedto, setAssignedTo] = useState("");
-  const [category, setCategory] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await createTask(title, description, assignedto, category);
-    alert("Task assigned successfully!");
-    setTitle("");
-    setDescription("");
-    setAssignedTo("");
-    setCategory("");
-    await onTaskAssigned();
-  };
-
-  const fetchAllEmployees = async () => {
-    const data = await getAllEmployees();
-
-    setallEmployees(data.documents);
-  };
-
-  useEffect(() => {
-    fetchAllEmployees();
-  }, []);
+  const {
+    allEmployees,
+    title,
+    description,
+    assignedto,
+    category,
+    setTitle,
+    setDescription,
+    setAssignedTo,
+    setCategory,
+    handleSubmit,
+  } = useAssignTaskForm({ onTaskAssigned });
 
   return (
     <div className="w-full">

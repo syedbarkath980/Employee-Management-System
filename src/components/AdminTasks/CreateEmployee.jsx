@@ -1,25 +1,15 @@
-import { useState } from "react";
-import { createEmployee } from "../../../appwrite/auth_service";
-import { createUser } from "../../../appwrite/db_service";
+import useCreateEmployeeForm from "../../hooks/useCreateEmployeeForm";
 
 const CreateEmployee = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const user = await createEmployee(name, email, password);
-      await createUser(name, email, user.$id);
-      alert("Employee Added Successfully!");
-      setName("");
-      setEmail("");
-      setPassword("");
-    } catch {
-      console.log("Error", Error);
-    }
-  };
+  const {
+    name,
+    email,
+    password,
+    setName,
+    setEmail,
+    setPassword,
+    handleSubmit,
+  } = useCreateEmployeeForm();
 
   return (
     <div className="mx-auto w-full max-w-2xl">

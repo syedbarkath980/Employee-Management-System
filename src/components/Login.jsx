@@ -1,37 +1,16 @@
-import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { getCurrentUser, login } from "../../appwrite/auth_service";
+import useLogin from "../hooks/useLogin";
 
 const Login = ({ onLoginSuccess, setUserType }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-
-  const toggleVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
-
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await login(email, password);
-      const userData = getCurrentUser();
-      const usertype = await userData;
-      setUserType(usertype.name);
-      onLoginSuccess();
-    } catch (error) {
-      console.error("Login flow failed:", error);
-
-      const isInvalidCredentials =
-        error?.code === 401 || error?.type === "user_invalid_credentials";
-
-      alert(
-        isInvalidCredentials
-          ? "Invalid Credentials!"
-          : error?.message || "Login failed. Please try again.",
-      );
-    }
-  };
+  const {
+    email,
+    password,
+    showPassword,
+    setEmail,
+    setPassword,
+    toggleVisibility,
+    handleFormSubmit,
+  } = useLogin({ onLoginSuccess, setUserType });
 
   return (
     <div className="relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#FBFBFB] px-4">
