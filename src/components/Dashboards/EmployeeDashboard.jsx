@@ -3,11 +3,15 @@ import useEmployeeTasks from "../../hooks/useEmployeeTasks";
 import useLogout from "../../hooks/useLogout";
 
 const EmployeeDashboard = ({ onLogoutSuccess }) => {
+
+
   const { username, tasks, markCompleted, counts } = useEmployeeTasks();
   const handleLogout = useLogout({ onLogoutSuccess });
   const pendingTasks = counts.pending;
   const completedTasks = counts.completed;
   const totalTasks = counts.total;
+
+  
 
   return (
     <div
@@ -97,45 +101,63 @@ const EmployeeDashboard = ({ onLogoutSuccess }) => {
           <div className="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
             {tasks
               .filter((task) => task.status === "pending")
-              .map((task) => (
-                <article
-                  key={task.$id}
-                  className="rounded-2xl border border-[#E1E1E1] bg-[#FBFBFB] p-5 shadow-[0_18px_40px_rgba(43,62,80,0.06)] transition hover:-translate-y-1 hover:shadow-[0_24px_50px_rgba(43,62,80,0.1)] sm:p-6"
-                >
-                  <div className="flex h-full flex-col gap-4">
-                    <div className="space-y-2">
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <h3 className="text-xl font-bold tracking-tight text-[#2B3E50]">
-                          {task.title}
-                        </h3>
-                        <span
-                          className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] ${task.status === "pending" ? "bg-amber-100 text-[#B85E00]" : "bg-green-100 text-[#1F7A36]"}`}
-                        >
-                          {task.status}
-                        </span>
-                      </div>
-                      <p className="text-sm leading-6 text-[#2B3E50]/70">
-                        {task.description}
-                      </p>
-                    </div>
+              .map((task) => {
+                const dateString = task.$createdAt;
+                const createdDate = new Date(dateString);
+                const formattedDate = createdDate.toLocaleString("en-IN", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                  timeZone: "Asia/Kolkata",
+                });
 
-                    <div className="mt-auto flex items-center justify-between gap-3 border-t border-[#E1E1E1] pt-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#084B8A]">
-                        {task.category}
-                      </p>
-                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#2B3E50]/55">
+                return (
+                  <article
+                    key={task.$id}
+                    className="rounded-2xl border border-[#E1E1E1] bg-[#FBFBFB] p-5 shadow-[0_18px_40px_rgba(43,62,80,0.06)] transition hover:-translate-y-1 hover:shadow-[0_24px_50px_rgba(43,62,80,0.1)] sm:p-6"
+                  >
+                    <div className="flex h-full flex-col gap-4">
+                      <div className="space-y-2">
+                        <div className="flex flex-wrap items-start justify-between gap-3">
+                          <h3 className="text-xl font-bold tracking-tight text-[#2B3E50]">
+                            {task.title}
+                          </h3>
+                          <span
+                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] ${task.status === "pending" ? "bg-amber-100 text-[#B85E00]" : "bg-green-100 text-[#1F7A36]"}`}
+                          >
+                            {task.status}
+                          </span>
+                        </div>
+                        <p className="text-sm leading-6 text-[#2B3E50]/70">
+                          {task.description}
+                        </p>
+                      </div>
+
+                      <div className="mt-auto flex items-center justify-between gap-3 border-t border-[#E1E1E1] pt-4">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#084B8A]">
+                            {task.category}
+                          </p>
+                          <p className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-[#2B3E50]/55">
+                            {formattedDate}
+                          </p>
+                        </div>
+
                         <button
                           aria-label={`Mark ${task.title} as completed`}
-                          className="inline-flex items-center justify-center rounded-2xl bg-[#084B8A] px-5 py-2 text-sm font-semibold text-white normal-case shadow-md hover:bg-[#073a6f] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#87CEEB]"
+                          className="inline-flex items-center justify-center rounded-2xl bg-[#084B8A] px-5 py-2 text-sm font-semibold text-white normal-case shadow-md transition-colors hover:bg-[#073a6f] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#87CEEB] focus-visible:ring-offset-2"
                           onClick={() => markCompleted(task.$id)}
                         >
                           Done ✅
                         </button>
-                      </p>
+                      </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              } )}
           </div>
         </section>
         <section>
